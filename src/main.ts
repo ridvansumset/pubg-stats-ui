@@ -1,33 +1,17 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { router } from './router'
+import { store } from './store'
 import App from './App.vue'
-import { routes } from './routes'
+import { Main as MainLayout } from './layouts';
 import './index.css'
 
-const app = createApp(App)
+const app = createApp(App);
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: import.meta.hot ? [] : routes,
-})
+// layouts
+app.component('MainLayout', MainLayout);
 
-if (import.meta.hot) {
-  const removeRoutes = []
+// packages
+app.use(router);
+app.use(store);
 
-  for (const route of routes) {
-    removeRoutes.push(router.addRoute(route))
-  }
-}
-if (import.meta.hot) {
-  import.meta.hot?.accept('./routes.ts', ({ routes }) => {
-    for (const removeRoute of removeRoutes) removeRoute()
-    removeRoutes = []
-    for (const route of routes) {
-      removeRoutes.push(router.addRoute(route))
-    }
-    router.replace('')
-  })
-}
-
-app.use(router)
-app.mount('#app')
+app.mount('#app');
