@@ -15,7 +15,7 @@ export enum LoadingMaskType {
 }
 
 const mapNamer: {[key: string]: string} = {
-  Baltic_Main: 'Erangel (Remastered)',
+  Baltic_Main: 'Erangel', // (Remastered)
   Chimera_Main: 'Paramo',
   Desert_Main: 'Miramar',
   DihorOtok_Main: 'Vikendi',
@@ -71,3 +71,11 @@ const modeNamer: {[key: string]: string} = {
   'tdm': 'Team Deathmatch',
 }
 export const GetModeName = (m: string) => modeNamer[m] ? modeNamer[m] : m;
+
+const deathTyper: {[key: string]: string} = {
+  alive: '-',
+  byzone: 'Blue Zone',
+  byplayer: 'Opponent Player',
+  bycar: 'Car',
+}
+export const GetDeathType = (m: string) => deathTyper[m] ? deathTyper[m] : m

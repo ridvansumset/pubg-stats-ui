@@ -4,6 +4,7 @@ import {
   LoadingMaskType,
   GetMapName,
   GetModeName,
+  GetDeathType,
 } from './constants';
 
 export {
@@ -12,4 +13,5 @@ export {
   LoadingMaskType,
   GetMapName,
   GetModeName,
+  GetDeathType,
 };

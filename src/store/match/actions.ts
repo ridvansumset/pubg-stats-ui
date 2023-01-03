@@ -2,18 +2,16 @@ import { ActionContext } from 'vuex';
 import type { RootState } from '../index';
 import { MatchState } from './state';
 import { APIService } from '../../services';
-import type { MatchData } from '../../models';
 
 export default {
   async fetchMatchById({ state, commit, dispatch }: ActionContext<MatchState, RootState>) {
     try {
-      const res = await APIService.getMatchById(state.params);
-      const data: MatchData = JSON.parse(res.data);
+      const { queryTimestamps, match } = await APIService.getMatchById(state.params);
 
-      dispatch('common/updateQueryTimestamps', data.queryTimestamps, { root: true });
+      dispatch('common/updateQueryTimestamps', queryTimestamps, { root: true });
 
       const matches = state.matches.slice();
-      matches.push(data.match);
+      matches.push(match);
 
       commit('setMatches', matches);
     } catch (err) {
@@ -24,16 +22,10 @@ export default {
     try {
       commit('setIsLoading', true);
 
-      if (rootState.player.player) {
-        // TODO: delete later
-        // const sleep = (t: number) => new Promise((res) => setTimeout(res, t));
-        const last5MatchIds = rootState.player.player.matchIds.slice(0, 5);
-
-        for (let i = 0; i < last5MatchIds.length; i++) {
-          // await sleep(i * 1000);
-          await commit('setParams', { id: last5MatchIds[i], participantId: rootState.player.player.id });
-          await dispatch('fetchMatchById');
-        }
+      const last5MatchIds = rootState.player.player.matchIds.slice(0, 5);
+      for (let i = 0; i < last5MatchIds.length; i++) {
+        await commit('setParams', { id: last5MatchIds[i], participantId: rootState.player.player.id });
+        await dispatch('fetchMatchById');
       }
     } catch (err) {
       throw err;

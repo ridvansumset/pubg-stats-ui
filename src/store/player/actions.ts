@@ -2,7 +2,6 @@ import { ActionContext } from 'vuex';
 import type { RootState } from '../index';
 import { PlayerState } from './state';
 import { APIService } from '../../services';
-import type { PlayerData } from '../../models'
 
 export default {
   async fetchPlayerByName({ state, commit, dispatch }: ActionContext<PlayerState, RootState>) {
@@ -11,11 +10,10 @@ export default {
       commit('setPlayer', {});
       commit('match/setMatches', [], { root: true });
 
-      const res = await APIService.getPlayerByName(state.params.name);
-      const data: PlayerData = JSON.parse(res.data);
+      const { queryTimestamps, player } = await APIService.getPlayerByName(state.params.name);
 
-      dispatch('common/updateQueryTimestamps', data.queryTimestamps, { root: true });
-      commit('setPlayer', data.player);
+      dispatch('common/updateQueryTimestamps', queryTimestamps, { root: true });
+      commit('setPlayer', player);
     } catch (err) {
       throw err;
     } finally {
